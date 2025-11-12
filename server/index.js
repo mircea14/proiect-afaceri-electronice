@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const { User } = require('./database/models');
 
 const userRoutes = require('./routes/user.routes');
+const authRoutes = require('./routes/auth.routes');
 
 const app = express();
 dotenv.config(); //dupa aceasta linie avem acces la cheile de env
@@ -22,6 +23,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/users', userRoutes);
+app.use('/auth', authRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server successfully started on port ${PORT}`);
