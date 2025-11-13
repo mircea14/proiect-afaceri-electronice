@@ -7,11 +7,12 @@ const { User } = require('./database/models');
 
 const userRoutes = require('./routes/user.routes');
 const authRoutes = require('./routes/auth.routes');
+const productRoutes = require('./routes/product.routes');
 
 const app = express();
 dotenv.config(); //dupa aceasta linie avem acces la cheile de env
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors()); //cine are drept sa dea request; daca nu e nmc e toata lumea
 app.use(morgan('dev')) //logheaza request
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 
 app.use('/users', userRoutes);
 app.use('/auth', authRoutes);
+app.use('/products', productRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server successfully started on port ${PORT}`);
