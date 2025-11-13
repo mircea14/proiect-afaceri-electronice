@@ -1,14 +1,35 @@
-// client/components/Navbar.jsx
+// client/src/components/Navbar.jsx
+
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon, UserCircleIcon } from '@heroicons/react/24/outline'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { logout } from '../store/slices/userSlice'
 import { classNames } from '../utils/tailwind'
 
 const navigation = [
-  { name: 'Homepage', href: '#', current: true },
-  { name: 'Products', href: '#', current: false },
+  { name: 'Homepage', href: '/' },
+  { name: 'Products', href: '/products' },
 ]
 
 export default function Navbar() {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const loggedIn = useSelector((state) => state.user.loggedIn)
+
+  const isActive = (href) => {
+    return location.pathname === href
+  }
+
+  const handleAuthClick = () => {
+    if (loggedIn) {
+      dispatch(logout())
+      navigate('/')
+    } else {
+      navigate('/login')
+    }
+  }
   return (
     <Disclosure as="nav" className="relative bg-gray-800">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -33,17 +54,17 @@ export default function Navbar() {
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
-                    aria-current={item.current ? 'page' : undefined}
+                    to={item.href}
+                    aria-current={isActive(item.href) ? 'page' : undefined}
                     className={classNames(
-                      item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white',
+                      isActive(item.href) ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white',
                       'rounded-md px-3 py-2 text-sm font-medium',
                     )}
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -78,12 +99,12 @@ export default function Navbar() {
                   </a>
                 </MenuItem>
                 <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                  <button
+                    onClick={handleAuthClick}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden hover:bg-gray-100"
                   >
-                    Sign out
-                  </a>
+                    {loggedIn ? 'Sign out' : 'Sign in'}
+                  </button>
                 </MenuItem>
               </MenuItems>
             </Menu>
@@ -98,9 +119,9 @@ export default function Navbar() {
               key={item.name}
               as="a"
               href={item.href}
-              aria-current={item.current ? 'page' : undefined}
+              aria-current={isActive(item.href) ? 'page' : undefined}
               className={classNames(
-                item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white',
+                isActive(item.href) ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white',
                 'block rounded-md px-3 py-2 text-base font-medium',
               )}
             >

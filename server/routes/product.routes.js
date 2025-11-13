@@ -92,3 +92,5 @@ router.get('/:id', async (req, res) => {
         res.status(500).json({success: false, message: 'Error retrieving product', data: error.message});
     }
 })
+
+module.exports = router;
