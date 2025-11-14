@@ -2,4 +2,8 @@ const User = require('./user'); //aici user e cu u mic si e posibil sa trebuiasc
 
 const Product = require('./Product');
 
-module.exports ={User , Product};
+const Order = require('./Order');
+const OrderItem = require('./OrderItem');
+
+
+module.exports ={User , Product, Order, OrderItem};
