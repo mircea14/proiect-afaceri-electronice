@@ -10,6 +10,7 @@ import { classNames } from '../utils/tailwind'
 const navigation = [
   { name: 'Homepage', href: '/' },
   { name: 'Products', href: '/products' },
+  {name: 'ShoppingCart', href: '/cart'}
 ]
 
 export default function Navbar() {

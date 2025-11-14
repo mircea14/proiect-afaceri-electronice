@@ -195,7 +195,7 @@ export default function ProductsPage() {
                   <div>
                     <h3 className="text-sm text-gray-700">
                       <a href="#" onClick={(e) => e.preventDefault()}>
-                        <span aria-hidden="true" className="absolute inset-0" />
+                        {/* <span aria-hidden="true" className="absolute inset-0" /> */}
                         {product.name}
                       </a>
                     </h3>
@@ -208,7 +208,9 @@ export default function ProductsPage() {
                   </div>
                   <p className="text-sm font-medium text-gray-900">${product.price}</p>
                 </div>
-                <button
+                
+              </div>
+              <button
                   type="button"
                   onClick={() => handleAddToCart(product.id)}
                   disabled={product.stock === 0}
@@ -216,7 +218,6 @@ export default function ProductsPage() {
                 >
                   {product.stock === 0 ? 'Out of stock' : 'Add to cart'}
                 </button>
-              </div>
             </div>
           ))}
         </div>
