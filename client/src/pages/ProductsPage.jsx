@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { fetchProducts, deleteProduct } from '../api/product.routes';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { addToCart } from '../api/cart.routes';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -66,6 +67,30 @@ export default function ProductsPage() {
     navigate('/products/create');
   };
 
+  const handleAddToCart = async (productId) => {
+    console.log("CLICK add to cart", productId); //testare
+    if (!user) {
+      toast.error('Trebuie să fii autentificat pentru a adăuga produse în coș');
+      return;
+    }
+
+    try {
+      const response = await addToCart(productId, 1);
+
+      console.log("addToCart response", response); // testare
+
+      if (response?.success) {
+        toast.success('Produs adăugat în coș');
+      } else {
+        toast.error(response?.message || 'Nu se poate adauga produsul in cos');
+      }
+    } catch (err) {
+      toast.error(err.message || 'A aparut o eroare la adaugarea in cos');
+    }
+  };
+
+
+
   if (loading) {
     return <LoadingSpinner />;
   }
@@ -101,7 +126,7 @@ export default function ProductsPage() {
     );
   }
 
-  return (
+ return (
     <div className="bg-white h-screen overflow-y-auto">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         <div className="flex justify-between items-center mb-8">
@@ -137,7 +162,12 @@ export default function ProductsPage() {
                       title="Edit"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
                       </svg>
                     </button>
                     <button
@@ -148,28 +178,49 @@ export default function ProductsPage() {
                       title="Delete"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
                       </svg>
                     </button>
                   </div>
                 )}
               </div>
-              <div className="mt-4 flex justify-between">
-                <div>
-                  <h3 className="text-sm text-gray-700">
-                    <a href="#" onClick={(e) => e.preventDefault()}>
-                      <span aria-hidden="true" className="absolute inset-0" />
-                      {product.name}
-                    </a>
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-500">{product.category}</p>
+
+              <div className="mt-4 flex flex-col gap-2">
+                <div className="flex justify-between">
+                  <div>
+                    <h3 className="text-sm text-gray-700">
+                      <a href="#" onClick={(e) => e.preventDefault()}>
+                        <span aria-hidden="true" className="absolute inset-0" />
+                        {product.name}
+                      </a>
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500">{product.category}</p>
+                    {typeof product.stock === 'number' && (
+                      <p className="mt-1 text-xs text-gray-500">
+                        Stoc: {product.stock}
+                      </p>
+                    )}
+                  </div>
+                  <p className="text-sm font-medium text-gray-900">${product.price}</p>
                 </div>
-                <p className="text-sm font-medium text-gray-900">${product.price}</p>
+                <button
+                  type="button"
+                  onClick={() => handleAddToCart(product.id)}
+                  disabled={product.stock === 0}
+                  className="w-full inline-flex items-center justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {product.stock === 0 ? 'Out of stock' : 'Add to cart'}
+                </button>
               </div>
             </div>
           ))}
         </div>
       </div>
     </div>
-  )
+  );
 }

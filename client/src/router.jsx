@@ -9,6 +9,7 @@ import CreateProductPage from "./pages/CreateProductPage";
 import EditProductPage from "./pages/EditProductPage";
 import { ProtectedLayout, AuthLayout } from "./components/ProtectedRoute";
 import { AdminRoute } from "./components/AdminRoute";
+import CartPage from "./pages/CartPage";
 
 export const router = createBrowserRouter([
   {
@@ -26,7 +27,12 @@ export const router = createBrowserRouter([
       // Protected routes - require authentication
       {
         element: <ProtectedLayout />,
-        children: [],
+        children: [
+          {
+            path: "cart",
+            element: <CartPage />,
+          },
+        ],
       },
       // Admin routes - require authentication AND admin role
       {
